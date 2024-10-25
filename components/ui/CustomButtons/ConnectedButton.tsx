@@ -17,6 +17,7 @@ import {
 } from "wagmi"; // Import useBalance
 import DisconnectButton from "./DisconnectButton";
 import Image from "next/image";
+import { ImageIcon } from "lucide-react";
 
 const ConnectedButton = () => {
   const { address } = useAccount();
@@ -49,7 +50,7 @@ const ConnectedButton = () => {
         <SheetTrigger>
           {connectors.map((connector) => (
             <div key={connector.id} className="relative">
-              <Image
+              <img
                 width={50} // Larger size for the icon
                 height={50}
                 src={connector.icon}
