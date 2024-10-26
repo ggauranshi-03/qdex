@@ -8,22 +8,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  useAccount,
-  useEnsName,
-  useBalance,
-  useDisconnect,
-  useEnsAvatar,
-} from "wagmi"; // Import useBalance
+
+import { useAccount, useEnsName, useBalance, useDisconnect } from "wagmi"; // Import useBalance
 import DisconnectButton from "./DisconnectButton";
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
+import { Spinner } from "@/components/Loaders/DefaultSpinner";
 
 const ConnectedButton = () => {
   const { address } = useAccount();
   const { connectors } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
-  const { data: ensAvatar } = useEnsAvatar({ name: ensName! });
 
   const displayAddress =
     ensName || (address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "");
@@ -35,11 +29,11 @@ const ConnectedButton = () => {
     isError,
   } = useBalance({
     address: address,
-    watch: true, // Keep the balance updated
+    // Keep the balance updated
   });
 
   // Handle loading and error states
-  if (isLoading) return <p>Loading balance...</p>;
+  if (isLoading) return <Spinner />;
   if (isError) return <p>Error fetching balance</p>;
 
   const balance = balanceData?.formatted || "0.00"; // Format balance if available
@@ -50,10 +44,10 @@ const ConnectedButton = () => {
         <SheetTrigger>
           {connectors.map((connector) => (
             <div key={connector.id} className="relative">
-              <img
+              <Image
                 width={50} // Larger size for the icon
                 height={50}
-                src={connector.icon}
+                src={connector.icon || ""}
                 alt="connector"
                 className="rounded-full"
               />
