@@ -8,16 +8,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-import { useAccount, useEnsName, useBalance, useDisconnect } from "wagmi"; // Import useBalance
+import { useAccount, useEnsName, useBalance, useDisconnect } from "wagmi";
 import DisconnectButton from "./DisconnectButton";
-import Image from "next/image";
 import { Spinner } from "@/components/Loaders/DefaultSpinner";
 
 const ConnectedButton = () => {
   const { address } = useAccount();
   const { connectors } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
+  const connector = connectors[0]; // Use only the first connector
 
   const displayAddress =
     ensName || (address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "");
@@ -29,7 +28,6 @@ const ConnectedButton = () => {
     isError,
   } = useBalance({
     address: address,
-    // Keep the balance updated
   });
 
   // Handle loading and error states
@@ -42,30 +40,27 @@ const ConnectedButton = () => {
     <div className="rounded-full p-2 flex items-center justify-center cursor-pointer">
       <Sheet>
         <SheetTrigger>
-          {connectors.map((connector) => (
-            <div key={connector.id} className="relative">
-              <Image
-                width={50} // Larger size for the icon
-                height={50}
-                src={connector.icon || ""}
-                alt="connector"
-                className="rounded-full"
-              />
-              <div className="absolute top-9 right-0">
-                <span className="absolute inline-flex h-4 w-4 rounded-full bg-green-500 opacity-75 animate-ping" />{" "}
-                {/* Pulsating effect */}
-                <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500" />{" "}
-                {/* Solid badge */}
-              </div>
+          <div className="relative">
+            <img
+              width={50} // Larger size for the icon
+              height={50}
+              src={connector.icon || ""}
+              alt="connector"
+              className="rounded-full"
+            />
+            <div className="absolute top-9 right-0">
+              <span className="absolute inline-flex h-4 w-4 rounded-full bg-green-500 opacity-75 animate-ping" />{" "}
+              {/* Pulsating effect */}
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500" />{" "}
+              {/* Solid badge */}
             </div>
-          ))}
+          </div>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle className=" flex flex-row items-center justify-between gap-2">
+            <SheetTitle className="flex flex-row items-center justify-between gap-2">
               <div className="flex flex-row items-center gap-2">
                 <PulsatingButton className="bg-green-500 rounded-full"></PulsatingButton>
-
                 {displayAddress}
               </div>
               <DisconnectButton />

@@ -33,7 +33,7 @@ export default function RootLayout({
   const initialState = cookieToInitialState(config, headers().get("cookie"));
 
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-hidden">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -43,11 +43,16 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <WagmiProviderComp initialState={initialState}>
-            <div className="p-5 flex flex-col w-full h-screen justify-center items-center">
+            <div className="flex flex-col w-full h-screen">
+              {/* Navbar at the top */}
               <Navbar />
-              <div className="flex flex-col h-[90vh] w-full justify-center items-center">
-                {children}
-                <RetroGrid />
+
+              {/* Main content area */}
+              <div className="flex  flex-col flex-grow justify-center items-center px-5">
+                <div className="flex flex-col h-[80vh] w-full justify-center items-center">
+                  {children}
+                  <RetroGrid />
+                </div>
               </div>
             </div>
           </WagmiProviderComp>
